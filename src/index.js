@@ -21,6 +21,17 @@ const BookList = () => {
 
 	const books = [firstBook, secondBook];
 
+	const someValue = 'Some Value';
+
+	const displayValue = () => {
+		console.log(someValue);
+	};
+
+	const getBook = (title) => {
+		const book = books.find((book) => book.title === title);
+		console.log(book);
+	};
+
 	return (
 		<section className="book-list">
 			{books.map((book) => {
@@ -28,6 +39,8 @@ const BookList = () => {
 					<Book
 						key={book.title}
 						{...book}
+						displayValue={displayValue}
+						getBook={getBook}
 						// imageUrl={book.imageUrl}
 						// title={book.title}
 						// author={book.author}
@@ -44,7 +57,7 @@ const BookList = () => {
 	);
 };
 
-const Book = ({ imageUrl, title, author, children }) => {
+const Book = ({ imageUrl, title, author, children, displayValue, getBook }) => {
 	//	const { imageUrl, title, author } = props.book;
 	//	const { children } = props;
 	return (
@@ -53,7 +66,11 @@ const Book = ({ imageUrl, title, author, children }) => {
 			<h2>{title}</h2>
 			<h4>{author}</h4>
 			{/* {children} */}
-			<EventExample />
+			<EventExample title={title} />
+			<button onClick={displayValue}>Display Value</button>
+			<div>
+				<button onClick={() => getBook(title)}>Get Book</button>
+			</div>
 		</section>
 	);
 };
@@ -75,13 +92,44 @@ const Book = ({ imageUrl, title, author, children }) => {
 // 	return <h4 style={innerHeadingStyles}>{author}</h4>;
 // };
 
-const EventExample = () => {
+const EventExample = ({ title }) => {
+	console.log(title);
 	const handleButtonClick = () => {
 		alert('Hello There');
 	};
+	const handleFormInput = (e) => {
+		console.log(e);
+		console.log(e.target);
+		console.log(e.target.name, e.target.value);
+	};
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log('submitted', e);
+	};
 	return (
 		<section>
+			<h1>Change Event</h1>
+			<form onSubmit={handleSubmit}>
+				<label htmlFor="test">Typical Form</label>
+				<input
+					onChange={handleFormInput}
+					type="text"
+					name="test"
+					id="test"
+					style={{ margin: '1rem 0' }}
+				/>
+				<button type="submit">Enter</button>
+			</form>
+			<form onSubmit={handleSubmit}>
+				<input onChange={handleFormInput} type="text" name="name" id="name" />
+				<button type="submit">Submit</button>
+			</form>
+			<h1>Button Event</h1>
 			<button onClick={handleButtonClick}>Click me</button>
+			<p>Anonymous Function</p>
+			<button onClick={() => console.log(`Fire Started ${title}`)}>
+				Fire it
+			</button>
 		</section>
 	);
 };
